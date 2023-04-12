@@ -1,10 +1,12 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import PlusOneIcon from '@mui/icons-material/PlusOne';
+import {IconButton, TextField} from '@mui/material';
 
 export type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export function AddItemForm(props: AddItemFormPropsType) {
+export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
 
@@ -30,11 +32,22 @@ export function AddItemForm(props: AddItemFormPropsType) {
             setError('Title is require')
         }
     }
-
+    const errorMessage = error && <div className={'error-message'}>{error}</div>
     return <div>
-        <input onChange={onChangeAddTaskTitleHandler} value={newTaskTitle} onKeyUp={onKeyUpAddTaskHandler}
-               className={error ? 'error' : ''}/>
-        <button onClick={onClickAddTaskHandler}>+</button>
-        {error && <div className={'error-message'}>{error}</div>}
+
+        <TextField
+            size={'small'}
+            onChange={onChangeAddTaskTitleHandler}
+            value={newTaskTitle} onKeyUp={onKeyUpAddTaskHandler}
+            error={!!error}
+            helperText={errorMessage}
+        />
+
+        <IconButton
+            size={'small'}
+            onClick={onClickAddTaskHandler}
+        >
+            <PlusOneIcon/>
+        </IconButton>
     </div>
 }

@@ -1,11 +1,11 @@
-.App {
+/*.App {
   padding: 30px;
   display: flex;
 }
 
 .App > div {
   margin-right: 50px;
-}
+}*/
 
 .error {
   border: red 1px solid;
@@ -15,10 +15,14 @@
   color: red;
 }
 
-.active-filter {
-  background-color: aquamarine;
-}
-
 .is-done {
   opacity: 0.5;
+}
+
+.todolist {
+  padding: 15px;
+}
+.btn-filter-container {
+  display: flex;
+  justify-content: space-between;
 }

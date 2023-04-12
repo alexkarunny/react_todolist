@@ -3,6 +3,9 @@ import {FilterType, TaskType} from '../App';
 import '../App.css'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
+import {Button, Checkbox, IconButton, List, ListItem, Paper, Typography} from '@mui/material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+
 
 type TodolistPropsType = {
     title: string
@@ -30,10 +33,23 @@ export function Todolist(props: TodolistPropsType) {
     }
 
     return (
-        <div>
-            <EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}/>
+
+        <div className={'todolist'}>
+            <Typography
+                variant={'h5'}
+                align={'center'}
+                fontWeight={'bold'}
+                gutterBottom
+            ><EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}/>
+                <IconButton
+                    size={'small'}
+                    onClick={() => {
+                    }}  //дописать удаление тудулиста
+                >
+                    <HighlightOffIcon/>
+                </IconButton></Typography>
             <AddItemForm addItem={addTask}/>
-            <ul>
+            <List>
                 {props.tasks.map(t => {
                     const changeTaskTitle = (title: string) => {
                         props.editTaskTitle(title, props.todolistID, t.id)
@@ -44,25 +60,43 @@ export function Todolist(props: TodolistPropsType) {
                     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
                         props.changeTaskStatus(t.id, e.currentTarget.checked, props.todolistID)
                     }
-                    return <li key={t.id} className={t.isDone ? 'is-done' : ''}>
-                        <input type="checkbox" checked={t.isDone} onChange={changeTaskStatus}/>
+                    return <ListItem
+                        key={t.id}
+                        className={t.isDone ? 'is-done' : ''}
+                        divider
+                        disablePadding
+                        secondaryAction={
+                            <IconButton
+                                size={'small'}
+                                onClick={removeTaskHandler}
+                            >
+                                <HighlightOffIcon/>
+                            </IconButton>
+                        }
+                    >
+                        <Checkbox
+                            edge={'start'}
+                            size={'small'}
+                            checked={t.isDone} onChange={changeTaskStatus}
+                        />
                         <EditableSpan title={t.title} changeTaskTitle={changeTaskTitle}/>
-                        <button onClick={removeTaskHandler}>x</button>
-                    </li>
+                    </ListItem>
                 })
                 }
-
-            </ul>
-            <div>
-                <button className={props.filter === 'all' ? 'active-filter' : ''}
+            </List>
+            <div className={'btn-filter-container'}>
+                <Button variant={'contained'} size={'small'}
+                        color={props.filter === 'all' ? 'secondary' : 'primary'}
                         onClick={() => changeFilterHandler('all')}>All
-                </button>
-                <button className={props.filter === 'active' ? 'active-filter' : ''}
+                </Button>
+                <Button variant={'contained'} size={'small'}
+                        color={props.filter === 'active' ? 'secondary' : 'primary'}
                         onClick={() => changeFilterHandler('active')}>Active
-                </button>
-                <button className={props.filter === 'completed' ? 'active-filter' : ''}
+                </Button>
+                <Button variant={'contained'} size={'small'}
+                        color={props.filter === 'completed' ? 'secondary' : 'primary'}
                         onClick={() => changeFilterHandler('completed')}>Completed
-                </button>
+                </Button>
             </div>
         </div>
     )

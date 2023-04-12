@@ -3,6 +3,19 @@ import {Todolist} from './components/Todolist';
 import './App.css'
 import {v1} from 'uuid';
 import {AddItemForm} from './components/AddItemForm';
+import {
+    AppBar,
+    Button,
+    Checkbox,
+    Container, createTheme, CssBaseline,
+    FormControlLabel,
+    FormGroup, Grid,
+    IconButton, Paper, ThemeProvider,
+    Toolbar,
+    Typography
+} from '@mui/material';
+import {Menu} from '@mui/icons-material';
+import {amber, lightGreen} from '@mui/material/colors';
 
 export type TaskType = {
     id: string
@@ -26,6 +39,7 @@ export function App() {
 
     const todolistID1 = v1()
     const todolistID2 = v1()
+    const [isDarkMode, setDarkMode] = useState<boolean>(true)
 
     const [tasks, setTasks] = useState<TasksType>({
             [todolistID1]: [
@@ -91,41 +105,94 @@ export function App() {
         setTodolists(todolists.map(t => t.id === todolistId ? {...t, title: newTitle} : t))
     }
 
+    const mode = isDarkMode ? 'dark' : 'light'
+
+    const customTheme = createTheme({
+
+        palette: {
+            primary: amber,
+            secondary: lightGreen,
+            mode: mode
+        }
+    })
+
     return (
-        <div className={'App'}>
-            <AddItemForm addItem={addTodolist}/>
-            {
-                todolists.map(tl => {
+        <ThemeProvider theme={customTheme}>
+            <CssBaseline/>
+            <div className={'App'}>
+                <AppBar position={'static'}>
+                    <Toolbar>
+                        <IconButton
+                            size={'large'}
+                            edge={'start'}
+                            color={'inherit'}
+                            aria-label={'menu'}
+                            sx={{mr: 2}}
+                        >
+                            <Menu/>
+                        </IconButton>
+                        <Typography
+                            variant={'h6'}
+                            component={'div'}
+                            sx={{flexGrow: 1}}
+                        >
+                            Todolists
+                        </Typography>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox
+                                    onChange={(e) => setDarkMode(e.currentTarget.checked)}
+                                />}
+                                label={isDarkMode ? 'Dark' : 'light'}/>
+                        </FormGroup>
+                        <Button color={'inherit'}>Login</Button>
+                    </Toolbar>
 
-                    let tasksForTodolist: TaskType[] = []
+                </AppBar>
+                <Container fixed>
+                    <Grid container sx={{p: '15px 0'}}>
+                        <AddItemForm addItem={addTodolist}/>
+                    </Grid>
+                    <Grid container spacing={4}>
+                        {
+                            todolists.map(tl => {
 
-                    switch (tl.filter) {
-                        case 'all':
-                            tasksForTodolist = tasks[tl.id]
-                            break;
-                        case 'active' :
-                            tasksForTodolist = tasks[tl.id].filter(t => !t.isDone);
-                            break
-                        case 'completed':
-                            tasksForTodolist = tasks[tl.id].filter(t => t.isDone);
-                            break
-                    }
+                                let tasksForTodolist: TaskType[] = []
 
-                    return <Todolist title={tl.title}
-                                     key={tl.id}
-                                     todolistID={tl.id}
-                                     tasks={tasksForTodolist}
-                                     removeTask={removeTask}
-                                     addTask={addTask}
-                                     changeFilter={changeFilter}
-                                     changeTaskStatus={changeTaskStatus}
-                                     filter={tl.filter}
-                                     editTaskTitle={editTaskTitle}
-                                     editTodolistTitle={editTodolistTitle}
-                    />
-                })
-            }
+                                switch (tl.filter) {
+                                    case 'all':
+                                        tasksForTodolist = tasks[tl.id]
+                                        break;
+                                    case 'active' :
+                                        tasksForTodolist = tasks[tl.id].filter(t => !t.isDone);
+                                        break
+                                    case 'completed':
+                                        tasksForTodolist = tasks[tl.id].filter(t => t.isDone);
+                                        break
+                                }
 
-        </div>
+                                return (
+                                    <Grid item>
+                                        <Paper elevation={3}>
+                                            <Todolist title={tl.title}
+                                                      key={tl.id}
+                                                      todolistID={tl.id}
+                                                      tasks={tasksForTodolist}
+                                                      removeTask={removeTask}
+                                                      addTask={addTask}
+                                                      changeFilter={changeFilter}
+                                                      changeTaskStatus={changeTaskStatus}
+                                                      filter={tl.filter}
+                                                      editTaskTitle={editTaskTitle}
+                                                      editTodolistTitle={editTodolistTitle}
+                                            />
+                                        </Paper>
+                                    </Grid>)
+                            })
+                        }
+                    </Grid>
+                </Container>
+            </div>
+        </ThemeProvider>
     );
 }
