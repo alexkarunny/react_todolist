@@ -35,7 +35,7 @@ export type TodolistType = {
 
 export type FilterType = 'all' | 'active' | 'completed'
 
-export function App() {
+export function App():JSX.Element {
 
     const todolistID1 = v1()
     const todolistID2 = v1()
