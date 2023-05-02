@@ -1,108 +1,89 @@
 import React, {useState} from 'react';
 import {Todolist} from './components/Todolist';
 import './App.css'
-import {v1} from 'uuid';
 import {AddItemForm} from './components/AddItemForm';
 import {
     AppBar,
     Button,
     Checkbox,
-    Container, createTheme, CssBaseline,
+    Container,
+    createTheme,
+    CssBaseline,
     FormControlLabel,
-    FormGroup, Grid,
-    IconButton, Paper, ThemeProvider,
+    FormGroup,
+    Grid,
+    IconButton,
+    Paper,
+    ThemeProvider,
     Toolbar,
     Typography
 } from '@mui/material';
 import {Menu} from '@mui/icons-material';
 import {amber, lightGreen} from '@mui/material/colors';
+import {
+    addTaskAC,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    TasksType,
+    TaskType
+} from './state/tasks-reducers';
+import {
+    addTodolistAC,
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
+    FilterType,
+    removeTodolistAC,
+    TodolistType
+} from './state/todolists-reducers';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from './state/store';
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+export function AppWithRedux(): JSX.Element {
+    console.log('app')
+    const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
+    const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
+    const dispatch = useDispatch()
 
-export type TasksType = {
-    [key: string]: TaskType[]
-}
-
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterType
-}
-
-export type FilterType = 'all' | 'active' | 'completed'
-
-export function App():JSX.Element {
-
-    const todolistID1 = v1()
-    const todolistID2 = v1()
     const [isDarkMode, setDarkMode] = useState<boolean>(true)
 
-    const [tasks, setTasks] = useState<TasksType>({
-            [todolistID1]: [
-                {id: v1(), title: 'React', isDone: false},
-                {id: v1(), title: 'HTML', isDone: true},
-                {id: v1(), title: 'CSS', isDone: true},
-                {id: v1(), title: 'SCSS', isDone: false},
-            ],
-            [todolistID2]: [
-                {id: v1(), title: 'Remark', isDone: false},
-                {id: v1(), title: 'Stendal', isDone: true},
-                {id: v1(), title: 'Bykov', isDone: false},
-                {id: v1(), title: 'Conan Doyle', isDone: false},
-            ],
-
-        }
-    )
-
-    const [todolists, setTodolists] = useState<TodolistType[]>([
-        {id: todolistID1, title: 'What to learn', filter: 'all'},
-        {id: todolistID2, title: 'What to read', filter: 'all'},
-    ])
-
     const removeTask = (taskId: string, todolistID: string) => {
-        tasks[todolistID] = tasks[todolistID].filter(t => t.id !== taskId)
-        setTasks({...tasks})
+
+        dispatch(removeTaskAC(taskId, todolistID))
     }
 
     const addTask = (title: string, todolistID: string) => {
-        const task: TaskType = {id: v1(), title: title, isDone: false};
-        tasks[todolistID] = [task, ...tasks[todolistID]]
-        setTasks({...tasks})
+
+        dispatch(addTaskAC(title, todolistID))
     }
 
     const changeFilter = (filter: FilterType, todolistID: string) => {
-        setTodolists(todolists.map(tl => tl.id === todolistID ? {...tl, filter: filter} : tl))
+
+        dispatch(changeTodolistFilterAC(todolistID, filter))
     }
 
     const changeTaskStatus = (taskId: string, taskStatus: boolean, todolistID: string) => {
-        tasks[todolistID] = tasks[todolistID].map(t => t.id === taskId ? {...t, isDone: taskStatus} : t)
-        setTasks({...tasks})
+
+        dispatch(changeTaskStatusAC(taskId, taskStatus, todolistID))
     }
 
     const addTodolist = (title: string) => {
-        const newTodolist: TodolistType = {
-            id: v1(),
-            title: title,
-            filter: 'all',
-        }
-        setTodolists([...todolists, newTodolist])
-        setTasks({...tasks, [newTodolist.id]: []})
-
+        dispatch(addTodolistAC(title))
     }
 
     const editTaskTitle = (newTitle: string, todolistId: string, taskId: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: tasks[todolistId].map(t => t.id === taskId ? {...t, title: newTitle} : t)
-        })
+
+        dispatch(changeTaskTitleAC(taskId, newTitle, todolistId))
     }
 
     const editTodolistTitle = (newTitle: string, todolistId: string) => {
-        setTodolists(todolists.map(t => t.id === todolistId ? {...t, title: newTitle} : t))
+
+
+        dispatch(changeTodolistTitleAC(todolistId, newTitle))
+    }
+
+    const removeTodolist = (todolistId: string) => {
+        dispatch(removeTodolistAC(todolistId))
     }
 
     const mode = isDarkMode ? 'dark' : 'light'
@@ -172,10 +153,10 @@ export function App():JSX.Element {
                                 }
 
                                 return (
-                                    <Grid item>
+                                    <Grid item key={tl.id}>
                                         <Paper elevation={3}>
                                             <Todolist title={tl.title}
-                                                      key={tl.id}
+
                                                       todolistID={tl.id}
                                                       tasks={tasksForTodolist}
                                                       removeTask={removeTask}
@@ -185,7 +166,7 @@ export function App():JSX.Element {
                                                       filter={tl.filter}
                                                       editTaskTitle={editTaskTitle}
                                                       editTodolistTitle={editTodolistTitle}
-                                                      removeTodolistCallback={() => {}}
+                                                      removeTodolistCallback={removeTodolist}
                                             />
                                         </Paper>
                                     </Grid>)

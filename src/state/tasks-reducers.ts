@@ -1,11 +1,27 @@
-import {TasksType} from '../App';
 import {v1} from 'uuid';
-import {ADD_TODOLIST, AddTodolistAC, REMOVE_TODOLIST, RemoveTodolistAC} from './todolists-reducers';
+import {
+    ADD_TODOLIST,
+    addTodolistAC,
+    REMOVE_TODOLIST,
+    removeTodolistAC,
+    todolistID1,
+    todolistID2
+} from './todolists-reducers';
 
 export const REMOVE_TASK = 'REMOVE-TASK'
 const ADD_TASK = 'ADD_TASK'
 const CHANGE_TASK_STATUS = 'CHANGE-TASK-STATUS'
 const CHANGE_TASK_TITLE = 'CHANGE_TASK_TITLE'
+
+export type TaskType = {
+    id: string
+    title: string
+    isDone: boolean
+}
+
+export type TasksType = {
+    [key: string]: TaskType[]
+}
 
 export type RemoveTaskAT = {
     type: typeof REMOVE_TASK
@@ -34,9 +50,31 @@ export type ChangeTaskTitleAT = {
     todolistId: string
 }
 
-export type actionTypes = RemoveTaskAT | AddTaskAT | ChangeTaskStatusAT | ChangeTaskTitleAT | ReturnType<typeof AddTodolistAC> | ReturnType<typeof RemoveTodolistAC>
+export type ActionTasksType =
+    RemoveTaskAT
+    | AddTaskAT
+    | ChangeTaskStatusAT
+    | ChangeTaskTitleAT
+    | ReturnType<typeof addTodolistAC>
+    | ReturnType<typeof removeTodolistAC>
 
-export const tasksReducer = (state: TasksType, action: actionTypes): TasksType => {
+const initialState: TasksType = {
+    [todolistID1]: [
+        {id: v1(), title: 'React', isDone: false},
+        {id: v1(), title: 'HTML', isDone: true},
+        {id: v1(), title: 'CSS', isDone: true},
+        {id: v1(), title: 'SCSS', isDone: false},
+    ],
+    [todolistID2]: [
+        {id: v1(), title: 'Remark', isDone: false},
+        {id: v1(), title: 'Stendal', isDone: true},
+        {id: v1(), title: 'Bykov', isDone: false},
+        {id: v1(), title: 'Conan Doyle', isDone: false},
+    ],
+}
+
+
+export const tasksReducer = (state: TasksType = initialState, action: ActionTasksType): TasksType => {
 
     switch (action.type) {
         case REMOVE_TASK:
@@ -70,7 +108,7 @@ export const tasksReducer = (state: TasksType, action: actionTypes): TasksType =
         case ADD_TODOLIST:
             return {
                 ...state,
-                [action.id] : []
+                [action.id]: []
             }
         case REMOVE_TODOLIST:
             const copyState = {...state}

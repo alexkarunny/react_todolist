@@ -3,7 +3,7 @@ import {FilterType, TaskType} from '../App';
 import '../App.css'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {Button, Checkbox, IconButton, List, ListItem, Paper, Typography} from '@mui/material';
+import {Button, Checkbox, IconButton, List, ListItem, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 
@@ -18,6 +18,7 @@ type TodolistPropsType = {
     filter: FilterType
     todolistID: string
     editTodolistTitle: (newTitle: string, todolistId: string) => void
+    removeTodolistCallback: (todolistId: string) => void
 }
 
 export function Todolist(props: TodolistPropsType) {
@@ -32,6 +33,10 @@ export function Todolist(props: TodolistPropsType) {
         props.editTodolistTitle(title, props.todolistID)
     }
 
+    const removeTodolistHandler = () => {
+        props.removeTodolistCallback(props.todolistID)
+    }
+
     return (
 
         <div className={'todolist'}>
@@ -43,8 +48,7 @@ export function Todolist(props: TodolistPropsType) {
             ><EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}/>
                 <IconButton
                     size={'small'}
-                    onClick={() => {
-                    }}  //дописать удаление тудулиста
+                    onClick={removeTodolistHandler}  //дописать удаление тудулиста
                 >
                     <HighlightOffIcon/>
                 </IconButton></Typography>
