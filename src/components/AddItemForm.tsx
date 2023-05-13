@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import {IconButton, TextField} from '@mui/material';
 
@@ -6,7 +6,7 @@ export type AddItemFormPropsType = {
     addItem: (title: string) => void
 }
 
-export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
+export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
 
@@ -50,4 +50,4 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = (props) => {
             <PlusOneIcon/>
         </IconButton>
     </div>
-}
+})
