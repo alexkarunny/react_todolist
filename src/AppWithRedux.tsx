@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Todolist} from './components/Todolist';
 import './App.css'
 import {AddItemForm} from './components/AddItemForm';
@@ -31,8 +31,18 @@ import {
 } from './state/todolists-reducers';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
+import {todolistsAPI} from './api/todolists-api';
 
 export function AppWithRedux(): JSX.Element {
+
+    useEffect(() => {
+        todolistsAPI.updateTodolistTitle('ce4164e1-b7ea-4b87-8472-3df0a8a7f9a6', 'newTasks')
+            .then(res => {
+                debugger
+                console.log(res.data)
+            })
+    }, [])
+
     const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
     const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
     const dispatch = useDispatch()

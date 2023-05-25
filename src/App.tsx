@@ -7,10 +7,15 @@ import {
     AppBar,
     Button,
     Checkbox,
-    Container, createTheme, CssBaseline,
+    Container,
+    createTheme,
+    CssBaseline,
     FormControlLabel,
-    FormGroup, Grid,
-    IconButton, Paper, ThemeProvider,
+    FormGroup,
+    Grid,
+    IconButton,
+    Paper,
+    ThemeProvider,
     Toolbar,
     Typography
 } from '@mui/material';
@@ -35,7 +40,9 @@ export type TodolistType = {
 
 export type FilterType = 'all' | 'active' | 'completed'
 
-export function App():JSX.Element {
+export function App(): JSX.Element {
+
+
 
     const todolistID1 = v1()
     const todolistID2 = v1()
@@ -185,7 +192,8 @@ export function App():JSX.Element {
                                                       filter={tl.filter}
                                                       editTaskTitle={editTaskTitle}
                                                       editTodolistTitle={editTodolistTitle}
-                                                      removeTodolistCallback={() => {}}
+                                                      removeTodolistCallback={() => {
+                                                      }}
                                             />
                                         </Paper>
                                     </Grid>)
