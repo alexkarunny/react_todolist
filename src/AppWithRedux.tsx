@@ -31,12 +31,22 @@ import {
 } from './state/todolists-reducers';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-import {todolistsAPI} from './api/todolists-api';
+import {ModelType, todolistsAPI} from './api/todolists-api';
 
 export function AppWithRedux(): JSX.Element {
 
+    const model: ModelType = {
+        completed: false,
+        deadline: '',
+        title: 'Witcher3',
+        description: '',
+        priority: 0,
+        startDate: '',
+        status: 0
+    }
+
     useEffect(() => {
-        todolistsAPI.updateTodolistTitle('ce4164e1-b7ea-4b87-8472-3df0a8a7f9a6', 'newTasks')
+        todolistsAPI.updateTask('a45032a7-208e-49a4-8e29-86af96b145a3', '2312c2a4-9324-44b7-9d3b-8e5e65d6d030', model )
             .then(res => {
                 debugger
                 console.log(res.data)

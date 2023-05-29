@@ -42,8 +42,6 @@ export type FilterType = 'all' | 'active' | 'completed'
 
 export function App(): JSX.Element {
 
-
-
     const todolistID1 = v1()
     const todolistID2 = v1()
     const [isDarkMode, setDarkMode] = useState<boolean>(true)
