@@ -26,8 +26,7 @@ import {
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     FilterType,
-    removeTodolistAC,
-    TodolistType
+    removeTodolistAC, TodolistDomainType
 } from './state/todolists-reducers';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
@@ -54,7 +53,7 @@ export function AppWithRedux(): JSX.Element {
     }, [])
 
     const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
-    const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)
+    const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
     const dispatch = useDispatch()
 
     const [isDarkMode, setDarkMode] = useState<boolean>(true)

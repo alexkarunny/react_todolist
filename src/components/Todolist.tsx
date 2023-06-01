@@ -1,11 +1,12 @@
 import React, {memo, useCallback, useMemo} from 'react';
-import {FilterType, TaskType} from '../App';
 import '../App.css'
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {Button, IconButton, List, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {Task} from '../Task';
+import {TaskStatusType, TaskType} from '../api/todolists-api';
+import {FilterType} from '../state/todolists-reducers';
 
 
 type TodolistPropsType = {
@@ -54,10 +55,10 @@ export const Todolist = memo((props: TodolistPropsType) => {
                 tasksForTodolist = props.tasks
                 break;
             case 'active' :
-                tasksForTodolist = props.tasks.filter(t => !t.isDone);
+                tasksForTodolist = props.tasks.filter(t => t.status === TaskStatusType.New);
                 break
             case 'completed':
-                tasksForTodolist = props.tasks.filter(t => t.isDone);
+                tasksForTodolist = props.tasks.filter(t => t.status === TaskStatusType.Completed);
                 break
         }
         console.log(`useMemo : ${tasksForTodolist}`)

@@ -1,8 +1,8 @@
 import React, {ChangeEvent, memo, useCallback} from 'react';
-import {TaskType} from './App';
 import {Checkbox, IconButton, ListItem} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {EditableSpan} from './components/EditableSpan';
+import {TaskStatusType, TaskType} from './api/todolists-api';
 
 type PropsType = {
     task: TaskType
@@ -29,7 +29,7 @@ export const Task = memo((props: PropsType) => {
         <div>
             <ListItem
                 key={task.id}
-                className={task.isDone ? 'is-done' : ''}
+                className={task.status === TaskStatusType.Completed ? 'is-done' : ''}
                 divider
                 disablePadding
                 secondaryAction={
@@ -44,7 +44,7 @@ export const Task = memo((props: PropsType) => {
                 <Checkbox
                     edge={'start'}
                     size={'small'}
-                    checked={task.isDone} onChange={changeTaskStatus}
+                    checked={task.status === TaskStatusType.Completed} onChange={changeTaskStatus}
                 />
                 <EditableSpan title={task.title} changeTaskTitle={changeTaskTitle}/>
             </ListItem>

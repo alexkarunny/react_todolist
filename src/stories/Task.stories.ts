@@ -1,6 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react';
 import {Task} from '../Task';
 import {action} from '@storybook/addon-actions'
+import {TaskPriorityType, TaskStatusType} from '../api/todolists-api';
 
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -12,7 +13,15 @@ const meta: Meta<typeof Task> = {
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 
     args: {
-        task: {id: 'TaskIsNotDone', isDone: false, title: 'TaskIsNotDone'},
+        task: {id: 'TaskIsNotDone', title: 'TaskIsNotDone', status: TaskStatusType.New,
+            addedDate: '',
+            completed: false,
+            deadline: '',
+            order: 0,
+            startDate: '',
+            description: '',
+            priority: TaskPriorityType.Low,
+            todoListId: 'TaskIsNotDone'},
         editTaskTitle: action('editTaskTitle'),
         removeTask: action('removeTask'),
         changeTaskStatus: action('changeTaskStatus'),
@@ -31,7 +40,15 @@ export const TaskIsNotDone: Story = {
 export const TaskIsDone: Story = {
     // More on args: https://storybook.js.org/docs/react/writing-stories/args
     args: {
-        task: {id: 'TaskIsDone', isDone: true, title: 'TaskIsDone'},
+        task: {id: 'TaskIsDone', title: 'TaskIsDone', status: TaskStatusType.Completed,
+            addedDate: '',
+            completed: true,
+            deadline: '',
+            order: 0,
+            startDate: '',
+            description: '',
+            priority: TaskPriorityType.Low,
+            todoListId: 'TaskIsDone'}
     },
 };
 
