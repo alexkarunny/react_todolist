@@ -20,74 +20,71 @@ import {
 } from '@mui/material';
 import {Menu} from '@mui/icons-material';
 import {amber, lightGreen} from '@mui/material/colors';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, TasksType} from './state/tasks-reducers';
+import {createTask, deleteTask, ModelDomainType, TasksType, updateTask} from './state/tasks-reducers';
 import {
-    addTodolistAC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC,
+    changeTodolistTitle,
+    createTodolist,
+    deleteTodolist,
+    fetchTodolists,
     FilterType,
-    removeTodolistAC, TodolistDomainType
+    TodolistDomainType
 } from './state/todolists-reducers';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
-import {ModelType, todolistsAPI} from './api/todolists-api';
+import {TaskStatusType} from './api/todolists-api';
 
 export function AppWithRedux(): JSX.Element {
-
-    const model: ModelType = {
-        completed: false,
-        deadline: '',
-        title: 'Witcher3',
-        description: '',
-        priority: 0,
-        startDate: '',
-        status: 0
-    }
-
-    useEffect(() => {
-        todolistsAPI.updateTask('a45032a7-208e-49a4-8e29-86af96b145a3', '2312c2a4-9324-44b7-9d3b-8e5e65d6d030', model )
-            .then(res => {
-                debugger
-                console.log(res.data)
-            })
-    }, [])
 
     const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
     const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        // @ts-ignore
+        dispatch(fetchTodolists())
+    }, [])
+
     const [isDarkMode, setDarkMode] = useState<boolean>(true)
 
     const removeTask = useCallback((taskId: string, todolistID: string) => {
-        dispatch(removeTaskAC(taskId, todolistID))
+        // @ts-ignore
+        dispatch(deleteTask(todolistID, taskId))
     }, [dispatch])
 
     const addTask = useCallback((title: string, todolistID: string) => {
-        dispatch(addTaskAC(title, todolistID))
+        // @ts-ignore
+        dispatch(createTask(todolistID, title))
     }, [dispatch])
 
     const changeFilter = useCallback((filter: FilterType, todolistID: string) => {
         dispatch(changeTodolistFilterAC(todolistID, filter))
     }, [dispatch])
 
-    const changeTaskStatus = useCallback((taskId: string, taskStatus: boolean, todolistID: string) => {
-        dispatch(changeTaskStatusAC(taskId, taskStatus, todolistID))
+    const switchTaskStatus = useCallback((todolistID: string, taskId: string, taskStatus: boolean) => {
+        const model: ModelDomainType = {status: taskStatus ? TaskStatusType.Completed : TaskStatusType.New}
+        // @ts-ignore
+        dispatch(updateTask( todolistID, taskId, model))
     }, [dispatch])
 
     const addTodolist = useCallback((title: string) => {
-        dispatch(addTodolistAC(title))
+        // @ts-ignore
+        dispatch(createTodolist(title))
     }, [dispatch])
 
     const editTaskTitle = useCallback((newTitle: string, todolistId: string, taskId: string) => {
-        dispatch(changeTaskTitleAC(taskId, newTitle, todolistId))
+        // @ts-ignore
+        dispatch(updateTask(todolistId, taskId, {title: newTitle}))
     }, [dispatch])
 
     const editTodolistTitle = useCallback((newTitle: string, todolistId: string) => {
-        dispatch(changeTodolistTitleAC(todolistId, newTitle))
+        // @ts-ignore
+        dispatch(changeTodolistTitle(todolistId, newTitle))
     }, [dispatch])
 
     const removeTodolist = useCallback((todolistId: string) => {
-        dispatch(removeTodolistAC(todolistId))
+        // @ts-ignore
+        return dispatch(deleteTodolist(todolistId));
     }, [dispatch])
 
     const mode = isDarkMode ? 'dark' : 'light'
@@ -151,7 +148,7 @@ export function AppWithRedux(): JSX.Element {
                                                       removeTask={removeTask}
                                                       addTask={addTask}
                                                       changeFilter={changeFilter}
-                                                      changeTaskStatus={changeTaskStatus}
+                                                      switchTaskStatus={switchTaskStatus}
                                                       filter={tl.filter}
                                                       editTaskTitle={editTaskTitle}
                                                       editTodolistTitle={editTodolistTitle}

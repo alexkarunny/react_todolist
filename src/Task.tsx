@@ -22,6 +22,7 @@ export const Task = memo((props: PropsType) => {
         restProps.removeTask(task.id)
     }
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
+        debugger
         restProps.changeTaskStatus(task.id, e.currentTarget.checked)
     }
 
