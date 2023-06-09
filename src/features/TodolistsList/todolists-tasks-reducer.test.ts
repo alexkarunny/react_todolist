@@ -1,13 +1,10 @@
 import {tasksReducer, TasksType} from './tasks-reducers';
 import {addTodolistAC, TodolistDomainType, todolistsReducer} from './todolists-reducers';
-import {TodolistType} from '../api/todolists-api';
+import {TodolistType} from '../../api/todolists-api';
 import {v1} from 'uuid';
 
-
 let todolistId3: string
-
 let newTodolist: TodolistType
-
 beforeEach(() => {
 
     todolistId3 = v1()

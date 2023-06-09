@@ -1,14 +1,14 @@
 import React, {memo, useCallback, useEffect, useMemo} from 'react';
-import '../App.css'
-import {AddItemForm} from './AddItemForm';
-import {EditableSpan} from './EditableSpan';
+import '../../../app/App.css'
+import {AddItemForm} from '../../../components/addItemForm/AddItemForm';
+import {EditableSpan} from '../../../components/editableSpan/EditableSpan';
 import {Button, IconButton, List, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import {Task} from '../Task';
-import {TaskStatusType, TaskType} from '../api/todolists-api';
-import {FilterType} from '../state/todolists-reducers';
-import {useDispatch} from 'react-redux';
-import {fetchTasks} from '../state/tasks-reducers';
+import {TaskStatusType, TaskType} from '../../../api/todolists-api';
+import {FilterType} from '../todolists-reducers';
+import {fetchTasks} from '../tasks-reducers';
+import {Task} from './Task/Task';
+import {useAppDispatch} from '../../../app/hooks';
 
 type TodolistPropsType = {
     title: string
@@ -26,11 +26,10 @@ type TodolistPropsType = {
 
 export const Todolist = memo((props: TodolistPropsType) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        // @ts-ignore
-        dispatch(fetchTasks(props.todolistID, props.tasks))
+        dispatch(fetchTasks(props.todolistID))
     })
 
     const allFilterHandler = useCallback(() => {
@@ -73,7 +72,6 @@ export const Todolist = memo((props: TodolistPropsType) => {
         return tasksForTodolist
     }, [props.filter, props.tasks])
 
-
     const changeTaskTitle = useCallback((newTitle: string, taskId: string) => {
         props.editTaskTitle(newTitle, props.todolistID, taskId)
     }, [props.editTaskTitle, props.todolistID])
@@ -109,25 +107,11 @@ export const Todolist = memo((props: TodolistPropsType) => {
                                  changeTaskStatus={changeTaskStatus}
                                  removeTask={removeTaskHandler}
                                  editTaskTitle={changeTaskTitle}
-
-
                     />
                 })
                 }
             </List>
             <div className={'btn-filter-container'}>
-                {/*                <Button variant={'contained'} size={'small'}
-                        color={props.filter === 'all' ? 'secondary' : 'primary'}
-                        onClick={() => changeFilterHandler('all')}>All
-                </Button>
-                <Button variant={'contained'} size={'small'}
-                        color={props.filter === 'active' ? 'secondary' : 'primary'}
-                        onClick={() => changeFilterHandler('active')}>Active
-                </Button>
-                <Button variant={'contained'} size={'small'}
-                        color={props.filter === 'completed' ? 'secondary' : 'primary'}
-                        onClick={() => changeFilterHandler('completed')}>Completed
-                </Button>*/}
                 <ButtonWithMemo title={'All'} onClick={allFilterHandler}
                                 color={props.filter === 'all' ? 'secondary' : 'primary'} variant={'contained'}
                                 size={'small'}/>
@@ -137,8 +121,6 @@ export const Todolist = memo((props: TodolistPropsType) => {
                 <ButtonWithMemo title={'Completed'} onClick={completedFilterHandler}
                                 color={props.filter === 'completed' ? 'secondary' : 'primary'} variant={'contained'}
                                 size={'small'}/>
-
-
             </div>
         </div>
     )

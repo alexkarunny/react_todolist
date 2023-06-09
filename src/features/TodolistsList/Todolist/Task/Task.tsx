@@ -1,8 +1,8 @@
 import React, {ChangeEvent, memo, useCallback} from 'react';
 import {Checkbox, IconButton, ListItem} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import {EditableSpan} from './components/EditableSpan';
-import {TaskStatusType, TaskType} from './api/todolists-api';
+import {EditableSpan} from '../../../../components/editableSpan/EditableSpan';
+import {TaskStatusType, TaskType} from '../../../../api/todolists-api';
 
 type PropsType = {
     task: TaskType
