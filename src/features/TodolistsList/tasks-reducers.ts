@@ -43,7 +43,7 @@ export const tasksReducer = (state: TasksType = {}, action: TasksActionsType) =>
             })
             return tasks
         case SET_TASKS:
-            return {...state, [action.todolistId]: action.tasks}
+            return {...state, [action.todolistId]: [...action.tasks, ...state[action.todolistId]]}
         default:
             return state
     }
@@ -93,7 +93,6 @@ export const updateTask = (todolistId: string, taskId: string, modelDomain: Mode
             completed: task.completed,
             ...modelDomain
         }
-        debugger
         todolistsAPI.updateTask(todolistId, taskId, model)
             .then(res => {
                 if (res.data.resultCode === 0) {

@@ -57,6 +57,7 @@ export function App(): JSX.Element {
                         </Typography>
                         <FormGroup>
                             <FormControlLabel
+                                name={'checkbox'}
                                 control={<Checkbox
                                     onChange={(e) => setDarkMode(e.currentTarget.checked)}
                                 />}

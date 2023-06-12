@@ -22,7 +22,6 @@ export const Task = memo((props: PropsType) => {
         restProps.removeTask(task.id)
     }
     const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
-        debugger
         restProps.changeTaskStatus(task.id, e.currentTarget.checked)
     }
 
@@ -43,6 +42,7 @@ export const Task = memo((props: PropsType) => {
                 }
             >
                 <Checkbox
+                    id={props.task.id}
                     edge={'start'}
                     size={'small'}
                     checked={task.status === TaskStatusType.Completed} onChange={changeTaskStatus}

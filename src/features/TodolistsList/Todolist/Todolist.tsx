@@ -30,7 +30,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
 
     useEffect(() => {
         dispatch(fetchTasks(props.todolistID))
-    })
+    }, [])
 
     const allFilterHandler = useCallback(() => {
         props.changeFilter('all', props.todolistID)
@@ -70,7 +70,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
                 break
         }
         return tasksForTodolist
-    }, [props.filter, props.tasks])
+    }, [props.filter, props.tasks, props.title])
 
     const changeTaskTitle = useCallback((newTitle: string, taskId: string) => {
         props.editTaskTitle(newTitle, props.todolistID, taskId)

@@ -33,6 +33,7 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
 
     return editMode
         ? <TextField
+            name={'editableSpan'}
             size={'small'}
             variant={'standard'}
             value={title}

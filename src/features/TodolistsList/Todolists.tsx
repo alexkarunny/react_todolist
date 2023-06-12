@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 import {createTask, deleteTask, ModelDomainType, updateTask} from './tasks-reducers';
 import {
     changeTodolistFilterAC,
@@ -16,14 +16,14 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 
 type TodolistsPropsType = {}
 
-export const Todolists: React.FC<TodolistsPropsType> = (props) => {
-
+export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
     const tasks = useAppSelector(state => state.tasks)
     const todolists = useAppSelector(state => state.todolists)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(fetchTodolists())
+        debugger
     }, [])
 
     const removeTask = useCallback((taskId: string, todolistID: string) => {
@@ -84,4 +84,4 @@ export const Todolists: React.FC<TodolistsPropsType> = (props) => {
         </>
     )
 
-}
+})
