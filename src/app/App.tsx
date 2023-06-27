@@ -9,7 +9,7 @@ import {
     CssBaseline,
     FormControlLabel,
     FormGroup,
-    IconButton,
+    IconButton, LinearProgress,
     ThemeProvider,
     Toolbar,
     Typography
@@ -17,15 +17,13 @@ import {
 import {Menu} from '@mui/icons-material';
 import {amber, lightGreen} from '@mui/material/colors';
 import {Todolists} from '../features/TodolistsList/Todolists';
+import {useAppSelector} from './hooks';
 
 export function App(): JSX.Element {
-
+    const status = useAppSelector(state => state.app.status)
     const [isDarkMode, setDarkMode] = useState<boolean>(true)
-
     const mode = isDarkMode ? 'dark' : 'light'
-
     const customTheme = createTheme({
-
         palette: {
             primary: amber,
             secondary: lightGreen,
@@ -67,6 +65,7 @@ export function App(): JSX.Element {
                     </Toolbar>
 
                 </AppBar>
+                {status === 'loading' && <LinearProgress color="inherit"/>}
                 <Container fixed>
                     <Todolists/>
                 </Container>

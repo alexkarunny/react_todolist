@@ -23,7 +23,6 @@ export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
 
     useEffect(() => {
         dispatch(fetchTodolists())
-        debugger
     }, [])
 
     const removeTask = useCallback((taskId: string, todolistID: string) => {

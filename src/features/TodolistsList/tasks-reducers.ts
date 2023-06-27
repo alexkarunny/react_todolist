@@ -8,6 +8,7 @@ import {
 } from './todolists-reducers';
 import {ModelType, TaskType, todolistsAPI} from '../../api/todolists-api';
 import {AppRootStateType, AppThunk} from '../../app/store';
+import {switchRequestStatus} from '../../app/app-reducer';
 
 //const
 const REMOVE_TASK = 'REMOVE-TASK'
@@ -57,29 +58,35 @@ export const setTasks = (todolistId: string, tasks: TaskType[]) => ({type: SET_T
 
 //thunks
 export const fetchTasks = (todolistId: string): AppThunk => (dispatch) => {
+    dispatch(switchRequestStatus('loading'))
     todolistsAPI.getTasks(todolistId)
         .then(res => {
             dispatch(setTasks(todolistId, res.data.items))
+            dispatch(switchRequestStatus('succeeded'))
         })
 }
 export const deleteTask = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
+    dispatch(switchRequestStatus('loading'))
     todolistsAPI.deleteTask(todolistId, taskId)
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(removeTaskAC(todolistId, taskId))
+                dispatch(switchRequestStatus('succeeded'))
             }
         })
 }
 export const createTask = (todolistId: string, title: string): AppThunk => (dispatch) => {
+    dispatch(switchRequestStatus('loading'))
     todolistsAPI.addTask(todolistId, title)
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(addTaskAC(res.data.data.item))
+                dispatch(switchRequestStatus('succeeded'))
             }
         })
 }
 export const updateTask = (todolistId: string, taskId: string, modelDomain: ModelDomainType): AppThunk => (dispatch, getState: () => AppRootStateType) => {
-
+    dispatch(switchRequestStatus('loading'))
     const task = getState().tasks[todolistId].find(t => t.id === taskId)
 
     if (task) {
@@ -97,6 +104,7 @@ export const updateTask = (todolistId: string, taskId: string, modelDomain: Mode
             .then(res => {
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskAC(res.data.data.item))
+                    dispatch(switchRequestStatus('succeeded'))
                 }
             })
     }
