@@ -1,9 +1,11 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from 'react';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import {IconButton, TextField} from '@mui/material';
+import {RequestStatusType} from '../../app/app-reducer';
 
 export type AddItemFormPropsType = {
     addItem: (title: string) => void
+    todolistEntityStatus?: RequestStatusType
 }
 
 export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
@@ -46,6 +48,7 @@ export const AddItemForm: React.FC<AddItemFormPropsType> = memo((props) => {
         <IconButton
             size={'small'}
             onClick={onClickAddTaskHandler}
+            disabled={props.todolistEntityStatus === 'loading'}
         >
             <PlusOneIcon/>
         </IconButton>

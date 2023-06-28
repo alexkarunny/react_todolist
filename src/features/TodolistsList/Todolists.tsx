@@ -59,11 +59,11 @@ export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
             <Grid container spacing={4}>
                 {
                     todolists.map(tl => {
-
                         return (
                             <Grid item key={tl.id}>
                                 <Paper elevation={3}>
                                     <Todolist title={tl.title}
+                                              entityStatus={tl.entityStatus}
                                               todolistID={tl.id}
                                               tasks={tasks[tl.id]}
                                               removeTask={removeTask}

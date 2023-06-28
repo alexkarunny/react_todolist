@@ -8,7 +8,7 @@ import {
 } from './todolists-reducers';
 import {ModelType, TaskType, todolistsAPI} from '../../api/todolists-api';
 import {AppRootStateType, AppThunk} from '../../app/store';
-import {switchRequestStatus} from '../../app/app-reducer';
+import {setAppError, switchRequestStatus} from '../../app/app-reducer';
 
 //const
 const REMOVE_TASK = 'REMOVE-TASK'
@@ -82,6 +82,13 @@ export const createTask = (todolistId: string, title: string): AppThunk => (disp
             if (res.data.resultCode === 0) {
                 dispatch(addTaskAC(res.data.data.item))
                 dispatch(switchRequestStatus('succeeded'))
+            } else {
+                if (res.data.messages.length) {
+                    dispatch(setAppError(res.data.messages[0]))
+                } else {
+                    dispatch(setAppError('Some error occurred'))
+                }
+                dispatch(switchRequestStatus('failed'))
             }
         })
 }

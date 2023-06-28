@@ -9,6 +9,7 @@ import {FilterType} from '../todolists-reducers';
 import {fetchTasks} from '../tasks-reducers';
 import {Task} from './Task/Task';
 import {useAppDispatch} from '../../../app/hooks';
+import {RequestStatusType} from '../../../app/app-reducer';
 
 type TodolistPropsType = {
     title: string
@@ -22,6 +23,7 @@ type TodolistPropsType = {
     todolistID: string
     editTodolistTitle: (newTitle: string, todolistId: string) => void
     removeTodolistCallback: (todolistId: string) => void
+    entityStatus: RequestStatusType
 }
 
 export const Todolist = memo((props: TodolistPropsType) => {
@@ -94,11 +96,12 @@ export const Todolist = memo((props: TodolistPropsType) => {
             ><EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}/>
                 <IconButton
                     size={'small'}
-                    onClick={removeTodolistHandler}  //дописать удаление тудулиста
+                    onClick={removeTodolistHandler}
+                    disabled={props.entityStatus === 'loading'}
                 >
                     <HighlightOffIcon/>
                 </IconButton></Typography>
-            <AddItemForm addItem={addTask}/>
+            <AddItemForm addItem={addTask} todolistEntityStatus={props.entityStatus}/>
             <List>
                 {tasksForTodolist.map(t => {
 

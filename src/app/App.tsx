@@ -18,6 +18,7 @@ import {Menu} from '@mui/icons-material';
 import {amber, lightGreen} from '@mui/material/colors';
 import {Todolists} from '../features/TodolistsList/Todolists';
 import {useAppSelector} from './hooks';
+import {ErrorSnackbar} from '../components/errorSnackbar/ErrorSnackbar';
 
 export function App(): JSX.Element {
     const status = useAppSelector(state => state.app.status)
@@ -35,6 +36,7 @@ export function App(): JSX.Element {
         <ThemeProvider theme={customTheme}>
             <CssBaseline/>
             <div className={'App'}>
+                <ErrorSnackbar />
                 <AppBar position={'static'}>
                     <Toolbar>
                         <IconButton
