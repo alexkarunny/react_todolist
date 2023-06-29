@@ -8,7 +8,8 @@ import {
 } from './todolists-reducers';
 import {ModelType, TaskType, todolistsAPI} from '../../api/todolists-api';
 import {AppRootStateType, AppThunk} from '../../app/store';
-import {setAppError, switchRequestStatus} from '../../app/app-reducer';
+import {switchRequestStatus} from '../../app/app-reducer';
+import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
 
 //const
 const REMOVE_TASK = 'REMOVE-TASK'
@@ -63,7 +64,9 @@ export const fetchTasks = (todolistId: string): AppThunk => (dispatch) => {
         .then(res => {
             dispatch(setTasks(todolistId, res.data.items))
             dispatch(switchRequestStatus('succeeded'))
-        })
+        }).catch(error => {
+        handleServerNetworkError(error, dispatch)
+    })
 }
 export const deleteTask = (todolistId: string, taskId: string): AppThunk => (dispatch) => {
     dispatch(switchRequestStatus('loading'))
@@ -72,8 +75,13 @@ export const deleteTask = (todolistId: string, taskId: string): AppThunk => (dis
             if (res.data.resultCode === 0) {
                 dispatch(removeTaskAC(todolistId, taskId))
                 dispatch(switchRequestStatus('succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
             }
-        })
+        }).catch(error => {
+        handleServerNetworkError(error, dispatch)
+    })
+
 }
 export const createTask = (todolistId: string, title: string): AppThunk => (dispatch) => {
     dispatch(switchRequestStatus('loading'))
@@ -83,14 +91,11 @@ export const createTask = (todolistId: string, title: string): AppThunk => (disp
                 dispatch(addTaskAC(res.data.data.item))
                 dispatch(switchRequestStatus('succeeded'))
             } else {
-                if (res.data.messages.length) {
-                    dispatch(setAppError(res.data.messages[0]))
-                } else {
-                    dispatch(setAppError('Some error occurred'))
-                }
-                dispatch(switchRequestStatus('failed'))
+                handleServerAppError(res.data, dispatch)
             }
-        })
+        }).catch(error => {
+        handleServerNetworkError(error, dispatch)
+    })
 }
 export const updateTask = (todolistId: string, taskId: string, modelDomain: ModelDomainType): AppThunk => (dispatch, getState: () => AppRootStateType) => {
     dispatch(switchRequestStatus('loading'))
@@ -112,8 +117,13 @@ export const updateTask = (todolistId: string, taskId: string, modelDomain: Mode
                 if (res.data.resultCode === 0) {
                     dispatch(changeTaskAC(res.data.data.item))
                     dispatch(switchRequestStatus('succeeded'))
+                } else {
+                    handleServerAppError(res.data, dispatch)
                 }
-            })
+            }).catch(error => {
+            handleServerNetworkError(error, dispatch)
+        })
+
     }
 }
 
