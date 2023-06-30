@@ -4,16 +4,16 @@ import {AddItemForm} from '../../../components/addItemForm/AddItemForm';
 import {EditableSpan} from '../../../components/editableSpan/EditableSpan';
 import {Button, IconButton, List, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import {TaskStatusType, TaskType} from '../../../api/todolists-api';
+import {TaskStatusType} from '../../../api/todolists-api';
 import {FilterType} from '../todolists-reducers';
-import {fetchTasks} from '../tasks-reducers';
+import {DomainTaskType, fetchTasks} from '../tasks-reducers';
 import {Task} from './Task/Task';
 import {useAppDispatch} from '../../../app/hooks';
 import {RequestStatusType} from '../../../app/app-reducer';
 
 type TodolistPropsType = {
     title: string
-    tasks: TaskType[]
+    tasks: DomainTaskType[]
     removeTask: (taskId: string, todolistID: string) => void
     changeFilter: (filter: FilterType, todolistID: string) => void
     addTask: (title: string, todolistID: string) => void
@@ -57,7 +57,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
         props.removeTodolistCallback(props.todolistID)
     }
 
-    let tasksForTodolist: TaskType[] = []
+    let tasksForTodolist: DomainTaskType[] = []
 
     useMemo(() => {
         switch (props.filter) {
@@ -72,7 +72,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
                 break
         }
         return tasksForTodolist
-    }, [props.filter, props.tasks, props.title])
+    }, [props.filter, props.tasks, props.title, props.entityStatus])
 
     const changeTaskTitle = useCallback((newTitle: string, taskId: string) => {
         props.editTaskTitle(newTitle, props.todolistID, taskId)
@@ -82,25 +82,18 @@ export const Todolist = memo((props: TodolistPropsType) => {
         props.removeTask(taskId, props.todolistID)
     }, [props.removeTask, props.todolistID])
     const changeTaskStatus = useCallback((taskId: string, taskStatus: boolean) => {
-        props.switchTaskStatus( props.todolistID, taskId, taskStatus)
+        props.switchTaskStatus(props.todolistID, taskId, taskStatus)
     }, [props.switchTaskStatus, props.todolistID])
 
     return (
 
         <div className={'todolist'}>
-            <Typography
-                variant={'h5'}
-                align={'center'}
-                fontWeight={'bold'}
-                gutterBottom
-            ><EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}/>
-                <IconButton
-                    size={'small'}
-                    onClick={removeTodolistHandler}
-                    disabled={props.entityStatus === 'loading'}
-                >
+            <Typography variant={'h5'} align={'center'} fontWeight={'bold'} gutterBottom>
+                <EditableSpan title={props.title} changeTaskTitle={editTodolistTitle} todolistEntityStatus={props.entityStatus}/>
+                <IconButton size={'small'} onClick={removeTodolistHandler} disabled={props.entityStatus === 'loading'}>
                     <HighlightOffIcon/>
-                </IconButton></Typography>
+                </IconButton>
+            </Typography>
             <AddItemForm addItem={addTask} todolistEntityStatus={props.entityStatus}/>
             <List>
                 {tasksForTodolist.map(t => {
@@ -110,6 +103,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
                                  changeTaskStatus={changeTaskStatus}
                                  removeTask={removeTaskHandler}
                                  editTaskTitle={changeTaskTitle}
+                                 todolistEntityStatus={props.entityStatus}
                     />
                 })
                 }

@@ -1,9 +1,12 @@
 import React, {KeyboardEvent, ChangeEvent, useState, memo} from 'react';
 import {TextField} from '@mui/material';
+import {RequestStatusType} from '../../app/app-reducer';
 
 type EditableSpanPropsType = {
     title: string
     changeTaskTitle: (title: string) => void
+    todolistEntityStatus?: RequestStatusType
+    taskEntityStatus?: RequestStatusType
 }
 
 export const EditableSpan = memo((props: EditableSpanPropsType) => {
@@ -11,6 +14,9 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
     const [title, setTitle] = useState(props.title)
 
     const setEditableMode = () => {
+        if(props.todolistEntityStatus === 'loading' || props.taskEntityStatus === 'loading') {
+            return
+        }
         setEditMode(true)
     }
 
@@ -42,5 +48,5 @@ export const EditableSpan = memo((props: EditableSpanPropsType) => {
             onBlur={setViewMode}
             autoFocus
         />
-        : <span onDoubleClick={setEditableMode}>{props.title} </span>
+        : <span onDoubleClick={setEditableMode} >{props.title} </span>
 })

@@ -21,7 +21,8 @@ const meta: Meta<typeof Task> = {
             startDate: '',
             description: '',
             priority: TaskPriorityType.Low,
-            todoListId: 'TaskIsNotDone'},
+            todoListId: 'TaskIsNotDone',
+        entityTaskStatus: 'idle'},
         editTaskTitle: action('editTaskTitle'),
         removeTask: action('removeTask'),
         changeTaskStatus: action('changeTaskStatus'),
@@ -48,7 +49,8 @@ export const TaskIsDone: Story = {
             startDate: '',
             description: '',
             priority: TaskPriorityType.Low,
-            todoListId: 'TaskIsDone'}
+            todoListId: 'TaskIsDone',
+        entityTaskStatus: 'idle'}
     },
 };
 
