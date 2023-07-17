@@ -13,15 +13,20 @@ import {Grid, Paper} from '@mui/material';
 import {AddItemForm} from '../../components/addItemForm/AddItemForm';
 import {Todolist} from './Todolist/Todolist';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {Navigate} from 'react-router-dom';
 
 type TodolistsPropsType = {}
 
 export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
     const tasks = useAppSelector(state => state.tasks)
     const todolists = useAppSelector(state => state.todolists)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        if (!isLoggedIn) {
+            return
+        }
         dispatch(fetchTodolists())
     }, [])
 
@@ -50,6 +55,10 @@ export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
     const removeTodolist = useCallback((todolistId: string) => {
         return dispatch(deleteTodolist(todolistId));
     }, [dispatch])
+
+    if (!isLoggedIn) {
+        return <Navigate to={'/login'}/>
+    }
 
     return (
         <>

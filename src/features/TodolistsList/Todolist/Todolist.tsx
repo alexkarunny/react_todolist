@@ -8,8 +8,9 @@ import {TaskStatusType} from '../../../api/todolists-api';
 import {FilterType} from '../todolists-reducers';
 import {DomainTaskType, fetchTasks} from '../tasks-reducers';
 import {Task} from './Task/Task';
-import {useAppDispatch} from '../../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {RequestStatusType} from '../../../app/app-reducer';
+import {Navigate} from 'react-router-dom';
 
 type TodolistPropsType = {
     title: string
@@ -27,10 +28,14 @@ type TodolistPropsType = {
 }
 
 export const Todolist = memo((props: TodolistPropsType) => {
-
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
+
     useEffect(() => {
+        if(!isLoggedIn) {
+            return
+        }
         dispatch(fetchTasks(props.todolistID))
     }, [])
 
@@ -72,7 +77,7 @@ export const Todolist = memo((props: TodolistPropsType) => {
                 break
         }
         return tasksForTodolist
-    }, [props.filter, props.tasks, props.title, props.entityStatus])
+    }, [props.filter, props.tasks, props.title, props.entityStatus, isLoggedIn])
 
     const changeTaskTitle = useCallback((newTitle: string, taskId: string) => {
         props.editTaskTitle(newTitle, props.todolistID, taskId)
@@ -84,6 +89,10 @@ export const Todolist = memo((props: TodolistPropsType) => {
     const changeTaskStatus = useCallback((taskId: string, taskStatus: boolean) => {
         props.switchTaskStatus(props.todolistID, taskId, taskStatus)
     }, [props.switchTaskStatus, props.todolistID])
+
+    if(!isLoggedIn) {
+        return <Navigate to={'/login'} />
+    }
 
     return (
 

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css'
 import {
     AppBar,
@@ -17,13 +17,18 @@ import {
 import {Menu} from '@mui/icons-material';
 import {amber, lightGreen} from '@mui/material/colors';
 import {Todolists} from '../features/TodolistsList/Todolists';
-import {useAppSelector} from './hooks';
+import {useAppDispatch, useAppSelector} from './hooks';
 import {ErrorSnackbar} from '../components/errorSnackbar/ErrorSnackbar';
 import {Login} from '../features/Login/Login';
 import {Navigate, Route, Routes} from 'react-router-dom';
+import {initializeApp} from './app-reducer';
 
 export function App(): JSX.Element {
     const status = useAppSelector(state => state.app.status)
+    const dispatch = useAppDispatch()
+    useEffect(() => {
+        dispatch(initializeApp())
+    }, [])
     const [isDarkMode, setDarkMode] = useState<boolean>(true)
     const mode = isDarkMode ? 'dark' : 'light'
     const customTheme = createTheme({
@@ -73,7 +78,7 @@ export function App(): JSX.Element {
                 <Container fixed>
                     <Routes>
                         <Route path={'/'} element={<Todolists/>} />
-                        <Route path={'login'} element={<Login/>} />
+                        <Route path={'/login'} element={<Login/>} />
                         <Route path={'/404'} element={<h1>404: PAGE NOT FOUND</h1>}/>
                         <Route path={'*'} element={<Navigate to={'/404'}/>}/>
                     </Routes>

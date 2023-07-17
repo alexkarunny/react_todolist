@@ -1,3 +1,7 @@
+import {AppThunk} from './store';
+import {authAPI} from '../api/todolists-api';
+import {isLoggedIn} from '../features/Login/auth-reducer';
+import {handleServerAppError, handleServerNetworkError} from '../utils/error-utils';
 
 //reducer
 const initialState:InitialStateType  = {
@@ -19,6 +23,26 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
 //actions
 export const switchRequestStatus = (requestStatus: RequestStatusType) => ({type: 'APP/SET-STATUS', requestStatus}as const)
 export const setAppError = (error: ErrorType) => ({type: 'APP/SET-ERROR', error }as const)
+
+//thunks
+export const initializeApp = (): AppThunk => (dispatch) => {
+    dispatch(switchRequestStatus('loading'))
+    authAPI.me()
+        .then(res => {
+            debugger
+            if(res.data.resultCode === 0) {
+                dispatch(isLoggedIn(true))
+                dispatch(switchRequestStatus('succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+                dispatch(isLoggedIn(false))
+            }
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
+            dispatch(isLoggedIn(false))
+        })
+}
 
 //types
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
