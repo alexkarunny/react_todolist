@@ -82,7 +82,6 @@ export const deleteTodolist = (todolistID: string): AppThunk => (dispatch) => {
                 handleServerAppError(res.data, dispatch)
             }
         }).catch(error => {
-            debugger
         handleServerNetworkError(error, dispatch)
         dispatch(changeTodolistEntityStatus(todolistID, 'failed'))
     })

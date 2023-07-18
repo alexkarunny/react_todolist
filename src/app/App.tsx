@@ -3,7 +3,7 @@ import './App.css'
 import {
     AppBar,
     Button,
-    Checkbox,
+    Checkbox, CircularProgress,
     Container,
     createTheme,
     CssBaseline,
@@ -25,6 +25,7 @@ import {initializeApp} from './app-reducer';
 
 export function App(): JSX.Element {
     const status = useAppSelector(state => state.app.status)
+    const isInitialized = useAppSelector(state => state.app.isInitialized)
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(initializeApp())
@@ -38,6 +39,12 @@ export function App(): JSX.Element {
             mode: mode
         }
     })
+
+    if(!isInitialized) {
+        return <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
 
     return (
         <ThemeProvider theme={customTheme}>
