@@ -1,6 +1,6 @@
 import {
     ADD_TODOLIST,
-    addTodolistAC,
+    addTodolistAC, clearTodosData,
     REMOVE_TODOLIST,
     removeTodolistAC,
     SET_TODOLISTS,
@@ -43,6 +43,7 @@ export const tasksReducer = (state: TasksType = {}, action: TasksActionsType): T
             delete copyState[action.todolistId]
             return copyState
         case SET_TODOLISTS:
+            debugger
             const tasks: TasksType = {}
             action.todolists.forEach(t => {
                 tasks[t.id] = []
@@ -56,6 +57,8 @@ export const tasksReducer = (state: TasksType = {}, action: TasksActionsType): T
                     ? {...t, entityTaskStatus: action.status}
                     : t)
             }
+        case 'CLEAR-TODOS-DATA':
+            return {}
         default:
             return state
     }
@@ -176,3 +179,4 @@ export type TasksActionsType =
     | ReturnType<typeof setTodolists>
     | ReturnType<typeof setTasks>
     | ReturnType<typeof changeEntityTaskStatus>
+    | ReturnType<typeof clearTodosData>

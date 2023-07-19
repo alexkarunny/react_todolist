@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 const instance = axios.create({
-        baseURL: 'https://social-network.samuraijs.com/api/1.1/',
-        withCredentials: true,
-        headers: {
-            'API-KEY': 'c46cfa49-c5da-44fb-bd1b-cd21454c410a'
-        }
-    })
+    baseURL: 'https://social-network.samuraijs.com/api/1.1/',
+    withCredentials: true,
+    headers: {
+        'API-KEY': 'c46cfa49-c5da-44fb-bd1b-cd21454c410a'
+    }
+})
 
 //api
 export const todolistsAPI = {
@@ -38,10 +38,13 @@ export const todolistsAPI = {
 
 export const authAPI = {
     login(loginModel: LoginModelType) {
-        return instance.post<ResponseType<{userId: number}>>(`auth/login`, loginModel)
+        return instance.post<ResponseType<{ userId: number }>>(`auth/login`, loginModel)
     },
-    me(){
+    me() {
         return instance.get<ResponseType<AuthDataType>>('/auth/me')
+    },
+    logOut() {
+        return instance.delete<ResponseType>('auth/login')
     }
 }
 
@@ -65,12 +68,14 @@ export type TaskType = {
     order: number
     addedDate: string
 }
+
 export enum TaskStatusType {
     New = 0,
     InProgress = 1,
     Completed = 2,
     Draft = 3
 }
+
 export enum TaskPriorityType {
     Low = 0,
     Middle = 1,
@@ -78,6 +83,7 @@ export enum TaskPriorityType {
     Urgently = 3,
     Later = 4
 }
+
 export type ResponseType<T = {}> = {
     data: T
     resultCode: number

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useEffect, useMemo} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import '../../../app/App.css'
 import {AddItemForm} from '../../../components/addItemForm/AddItemForm';
 import {EditableSpan} from '../../../components/editableSpan/EditableSpan';
@@ -6,11 +6,10 @@ import {Button, IconButton, List, Typography} from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {TaskStatusType} from '../../../api/todolists-api';
 import {FilterType} from '../todolists-reducers';
-import {DomainTaskType, fetchTasks} from '../tasks-reducers';
+import {DomainTaskType} from '../tasks-reducers';
 import {Task} from './Task/Task';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {useAppSelector} from '../../../app/hooks';
 import {RequestStatusType} from '../../../app/app-reducer';
-import {Navigate} from 'react-router-dom';
 
 type TodolistPropsType = {
     title: string
@@ -29,15 +28,6 @@ type TodolistPropsType = {
 
 export const Todolist = memo((props: TodolistPropsType) => {
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
-    const dispatch = useAppDispatch()
-
-
-    useEffect(() => {
-        if(!isLoggedIn) {
-            return
-        }
-        dispatch(fetchTasks(props.todolistID))
-    }, [])
 
     const allFilterHandler = useCallback(() => {
         props.changeFilter('all', props.todolistID)
@@ -90,15 +80,12 @@ export const Todolist = memo((props: TodolistPropsType) => {
         props.switchTaskStatus(props.todolistID, taskId, taskStatus)
     }, [props.switchTaskStatus, props.todolistID])
 
-    if(!isLoggedIn) {
-        return <Navigate to={'/login'} />
-    }
-
     return (
 
         <div className={'todolist'}>
             <Typography variant={'h5'} align={'center'} fontWeight={'bold'} gutterBottom>
-                <EditableSpan title={props.title} changeTaskTitle={editTodolistTitle} todolistEntityStatus={props.entityStatus}/>
+                <EditableSpan title={props.title} changeTaskTitle={editTodolistTitle}
+                              todolistEntityStatus={props.entityStatus}/>
                 <IconButton size={'small'} onClick={removeTodolistHandler} disabled={props.entityStatus === 'loading'}>
                     <HighlightOffIcon/>
                 </IconButton>

@@ -2,6 +2,7 @@ import {todolistsAPI, TodolistType} from '../../api/todolists-api';
 import {AppThunk} from '../../app/store';
 import {RequestStatusType, switchRequestStatus} from '../../app/app-reducer';
 import {handleServerAppError, handleServerNetworkError} from '../../utils/error-utils';
+import {fetchTasks} from './tasks-reducers';
 
 export const REMOVE_TODOLIST = 'REMOVE-TODOLIST'
 export const ADD_TODOLIST = 'ADD-TODOLIST'
@@ -24,6 +25,8 @@ export const todolistsReducer = (state: TodolistDomainType[] = [], action: Todol
             return action.todolists.map(t => ({...t, filter: 'all', entityStatus: 'idle'}))
         case 'CHANGE-TODOLIST-ENTITY-STATUS':
             return state.map(t => t.id === action.todolistId ? {...t, entityStatus: action.entityStatus} : t)
+        case 'CLEAR-TODOS-DATA':
+            return []
         default:
             return state
     }
@@ -44,6 +47,7 @@ export const changeTodolistEntityStatus = (todolistId: string, entityStatus: Req
     todolistId,
     entityStatus
 } as const)
+export const clearTodosData = () => ({type: 'CLEAR-TODOS-DATA'} as const)
 
 //thunks
 export const fetchTodolists = (): AppThunk => (dispatch) => {
@@ -52,6 +56,12 @@ export const fetchTodolists = (): AppThunk => (dispatch) => {
         .then(res => {
             dispatch(setTodolists(res.data))
             dispatch(switchRequestStatus('succeeded'))
+            return res.data
+        })
+        .then(todos => {
+            todos.forEach(tl => {
+                dispatch(fetchTasks(tl.id))
+            })
         }).catch(error => {
         handleServerNetworkError(error, dispatch)
     })
@@ -113,3 +123,4 @@ export type TodolistsActionsType = ReturnType<typeof removeTodolistAC>
     | ReturnType<typeof changeTodolistFilterAC>
     | ReturnType<typeof setTodolists>
     | ReturnType<typeof changeTodolistEntityStatus>
+    | ReturnType<typeof clearTodosData>

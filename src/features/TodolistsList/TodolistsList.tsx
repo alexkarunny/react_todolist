@@ -17,7 +17,7 @@ import {Navigate} from 'react-router-dom';
 
 type TodolistsPropsType = {}
 
-export const Todolists: React.FC<TodolistsPropsType> = memo((props) => {
+export const TodolistsList: React.FC<TodolistsPropsType> = memo((props) => {
     const tasks = useAppSelector(state => state.tasks)
     const todolists = useAppSelector(state => state.todolists)
     const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
