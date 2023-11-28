@@ -1,6 +1,7 @@
 {
   "name": "1-lesson",
   "version": "0.1.0",
+  "homepage": "https://alexkarunny.github.io/react_todolist/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -38,7 +39,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "jest:integration": "jest -c integration/jest.config.js",
-    "test:integration": "start-server-and-test storybook http-get://localhost:6006 jest:integration"
+    "test:integration": "start-server-and-test storybook http-get://localhost:6006 jest:integration",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -70,6 +73,7 @@
     "@storybook/testing-library": "0.0.14-next.2",
     "babel-plugin-named-exports-order": "0.0.2",
     "eslint-plugin-storybook": "^0.6.12",
+    "gh-pages": "^6.1.0",
     "jest-image-snapshot": "^6.1.0",
     "jest-puppeteer": "^8.0.6",
     "prop-types": "15.8.1",
